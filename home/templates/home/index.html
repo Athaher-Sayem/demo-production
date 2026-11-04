@@ -11,59 +11,85 @@
     <header class="site-header">
         <a class="brand" href="/">⚙️ Demo<span>Production</span></a>
         <nav class="nav">
-            <a href="#features">Features</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#news">News</a>
             <a href="#stats">Stats</a>
-            <a href="https://docs.djangoproject.com/" target="_blank" rel="noopener">Docs</a>
         </nav>
         <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
     </header>
 
     <main>
-        <section class="hero">
-            <h1>Hello, world! 👋</h1>
+        <section class="hero hero-compact">
+            <h1>Server load test 🚀</h1>
             <p class="tagline">
-                This is a Django-powered homepage, served with a dash of CSS and JavaScript.
+                1,000 images · pagination · tabs · news — how fast can this VPS serve them?
             </p>
-            <div class="hero-actions">
-                <a class="btn btn-primary" href="#features">Explore</a>
-                <a class="btn btn-ghost" href="https://docs.djangoproject.com/en/6.1/intro/tutorial01/"
-                   target="_blank" rel="noopener">Django Tutorial</a>
-            </div>
-            <p class="clock" id="clock">—</p>
         </section>
 
-        <section id="features" class="features">
-            <h2>Why Django?</h2>
-            <div class="feature-grid">
-                {% for feature in features %}
-                <article class="feature-card">
-                    <span class="feature-icon" aria-hidden="true">{{ feature.icon }}</span>
-                    <h3>{{ feature.title }}</h3>
-                    <p>{{ feature.text }}</p>
-                </article>
+        <section id="stats" class="stats">
+            <div class="stats-grid">
+                {% for stat in stats %}
+                <div class="stat-card">
+                    <span class="stat-value">{{ stat.value }}</span>
+                    <span class="stat-label">{{ stat.label }}</span>
+                </div>
                 {% endfor %}
             </div>
         </section>
 
-        <section id="stats" class="stats">
-            <h2>By the numbers</h2>
-            <div class="stats-grid">
-                {% for stat in stats %}
-                <div class="stat-card">
-                    <span class="stat-value"
-                          data-target="{{ stat.value }}"
-                          data-decimals="{% if stat.decimals %}{{ stat.decimals }}{% else %}0{% endif %}">
-                        0{{ stat.suffix }}
-                    </span>
-                    <span class="stat-label">{{ stat.label }}</span>
-                </div>
+        <section id="gallery" class="gallery">
+            <div class="tabs" role="tablist">
+                {% for key, label in tabs %}
+                <a href="?tab={{ key }}"
+                   class="tab {% if active_tab == key %}tab-active{% endif %}"
+                   role="tab"
+                   aria-selected="{% if active_tab == key %}true{% else %}false{% endif %}">
+                    {{ label }}
+                </a>
+                {% endfor %}
+            </div>
+
+            <div class="img-grid">
+                {% for img in images %}
+                <figure class="img-card">
+                    <img src="{% static img.image_path %}" alt="{{ img.title }}" loading="lazy" decoding="async">
+                    <figcaption>{{ img.title }}</figcaption>
+                </figure>
+                {% empty %}
+                <p class="empty">No images in this tab.</p>
+                {% endfor %}
+            </div>
+
+            {% if page_obj.has_other_pages %}
+            <nav class="pagination" aria-label="Pagination">
+                {% if page_obj.has_previous %}
+                <a class="page-link" href="?tab={{ active_tab }}&page={{ page_obj.previous_page_number }}">‹ Prev</a>
+                {% endif %}
+
+                <span class="page-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+                {% if page_obj.has_next %}
+                <a class="page-link" href="?tab={{ active_tab }}&page={{ page_obj.next_page_number }}">Next ›</a>
+                {% endif %}
+            </nav>
+            {% endif %}
+        </section>
+
+        <section id="news" class="news-section">
+            <h2>Latest news</h2>
+            <div class="news-list">
+                {% for item in news %}
+                <article class="news-card">
+                    <h3>{{ item.title }}</h3>
+                    <p>{{ item.body|truncatewords:28 }}</p>
+                </article>
                 {% endfor %}
             </div>
         </section>
     </main>
 
     <footer class="site-footer">
-        <p>&copy; <span id="year"></span> Demo Production — built with Django, CSS &amp; JavaScript.</p>
+        <p>&copy; <span id="year"></span> Demo Production — load-test build.</p>
     </footer>
 
     <script src="{% static 'home/js/main.js' %}"></script>

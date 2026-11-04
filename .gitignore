@@ -1,9 +1,12 @@
-# Python / Django
+# Files / Django
 __pycache__/
 *.py[cod]
 *.sqlite3
 /staticfiles/
 /media/
+
+# Generated load-test images (recreated by seed_loadtest at deploy time)
+home/static/home/loadtest/
 
 # Virtual environment
 .venv/
