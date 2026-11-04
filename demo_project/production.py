@@ -24,15 +24,17 @@ SECURE_HSTS_PRELOAD = False
 
 
 DATABASES = {
-"default": {
-"ENGINE": "django.db.backends.postgresql",
-"NAME": os.environ["POSTGRES_DB"],
-"USER": os.environ["POSTGRES_USER"],
-"PASSWORD": os.environ["POSTGRES_PASSWORD"],
-"HOST": "127.0.0.1",
-"PORT": "5432",
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ["POSTGRES_DB"],
+        "USER": os.environ["POSTGRES_USER"],
+        "PASSWORD": os.environ["POSTGRES_PASSWORD"],
+        "HOST": os.environ.get("POSTGRES_HOST", "127.0.0.1"),
+        "PORT": "5432",
+    }
 }
-}
+
+
 STATIC_URL = "/static/"
 STATIC_ROOT = "/var/www/demo-production/static"
 FILE_UPLOAD_PERMISSIONS = 0o640
@@ -49,4 +51,14 @@ LOGGING = {
 "propagate": False,
 }
 },
+}
+
+MIDDLEWARE = globals().get("MIDDLEWARE", [])
+MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
+
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    }
 }
