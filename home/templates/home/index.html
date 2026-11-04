@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }}</title>
+    <link rel="stylesheet" href="{% static 'home/css/style.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="/">⚙️ Demo<span>Production</span></a>
+        <nav class="nav">
+            <a href="#features">Features</a>
+            <a href="#stats">Stats</a>
+            <a href="https://docs.djangoproject.com/" target="_blank" rel="noopener">Docs</a>
+        </nav>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Hello, world! 👋</h1>
+            <p class="tagline">
+                This is a Django-powered homepage, served with a dash of CSS and JavaScript.
+            </p>
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="#features">Explore</a>
+                <a class="btn btn-ghost" href="https://docs.djangoproject.com/en/6.1/intro/tutorial01/"
+                   target="_blank" rel="noopener">Django Tutorial</a>
+            </div>
+            <p class="clock" id="clock">—</p>
+        </section>
+
+        <section id="features" class="features">
+            <h2>Why Django?</h2>
+            <div class="feature-grid">
+                {% for feature in features %}
+                <article class="feature-card">
+                    <span class="feature-icon" aria-hidden="true">{{ feature.icon }}</span>
+                    <h3>{{ feature.title }}</h3>
+                    <p>{{ feature.text }}</p>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section id="stats" class="stats">
+            <h2>By the numbers</h2>
+            <div class="stats-grid">
+                {% for stat in stats %}
+                <div class="stat-card">
+                    <span class="stat-value"
+                          data-target="{{ stat.value }}"
+                          data-decimals="{% if stat.decimals %}{{ stat.decimals }}{% else %}0{% endif %}">
+                        0{{ stat.suffix }}
+                    </span>
+                    <span class="stat-label">{{ stat.label }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; <span id="year"></span> Demo Production — built with Django, CSS &amp; JavaScript.</p>
+    </footer>
+
+    <script src="{% static 'home/js/main.js' %}"></script>
+</body>
+</html>
